@@ -2,7 +2,8 @@
   "name": "Caawiye App",
   "short_name": "Caawiye",
   "description": "Real-Time Voice-to-Text Accessibility Web Application",
-  "start_url": "./index.html",
+  "start_url": "/Caawiye-App/",
+  "scope": "/Caawiye-App/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0b0f19",
@@ -12,13 +13,19 @@
       "src": "logo.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
