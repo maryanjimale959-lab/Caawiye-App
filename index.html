@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Caawiye App - Voice-to-Text Accessibility</title>
+    
+    <!-- PWA & Mobile Launcher Icons -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="theme-color" content="#0b0f19">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Application Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <img src="logo.png" alt="Caawiye Logo" class="brand-logo">
+                <div class="brand-titles">
+                    <h1 class="brand-name">Caawiye</h1>
+                    <span class="brand-sub">Voice Accessibility</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="quickReplyBtn" class="header-action-btn" title="Quick Reply Cards">
+                    <i data-lucide="message-square"></i>
+                </button>
+                <button id="historyBtn" class="header-action-btn" title="Session History">
+                    <i data-lucide="history"></i>
+                </button>
+                <button id="menuBtn" class="header-action-btn" title="Settings & Tools">
+                    <i data-lucide="more-vertical"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Status Indicator & Audio Visualizer Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <div id="statusPill" class="status-pill ready">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Ready</span>
+                </div>
+                <span id="activeLangLabel" class="current-lang-tag">English</span>
+            </div>
+            <div class="status-right">
+                <span id="segmentCount" class="segment-count">0 segments</span>
+                <div id="audioVisualizer" class="audio-visualizer-container">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Live Feed Display -->
+        <main id="transcriptContainer" class="transcript-feed">
+            <div id="emptyState" class="empty-state">
+                <div class="empty-logo-wrapper">
+                    <img src="logo.png" alt="Caawiye Logo" class="empty-logo-img">
+                </div>
+                <h2>Real-Time Voice-to-Text</h2>
+                <p>Tap the microphone button to start listening. Spoken content will appear live on screen.</p>
+                
+                <!-- Quick Simulation Test Buttons -->
+                <div class="supported-langs-pills">
+                    <button class="sim-btn lang-pill" data-lang="en" data-text="Hello, welcome to Caawiye app. How can I help you today?">Simulate: English</button>
+                    <button class="sim-btn lang-pill" data-lang="ar" data-text="مرحباً بك في تطبيق عافية للتفريغ الصوتي المباشر.">Simulate: العربية</button>
+                    <button class="sim-btn lang-pill" data-lang="so" data-text="Ku soo dhawaaw app-ka Caawiye, sideen ku caawin karaa?">Simulate: Soomaali</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Real-Time Interim Buffer -->
+        <div id="interimBufferContainer" class="interim-buffer-container hidden">
+            <div class="interim-header">
+                <span><span class="pulse-red"></span> Transcribing Live</span>
+                <span id="interimLangTag">English</span>
+            </div>
+            <div id="interimText" class="interim-text">Listening...</div>
+        </div>
+
+        <!-- Footer / Mic & Language Navigation -->
+        <footer class="app-footer">
+            <div class="mic-button-container">
+                <button id="micBtn" class="mic-btn" aria-label="Toggle Microphone">
+                    <i data-lucide="mic" class="mic-icon"></i>
+                    <i data-lucide="square" class="stop-icon hidden"></i>
+                </button>
+            </div>
+            
+            <nav class="language-bar">
+                <button class="lang-tab active" data-lang="en-US" data-lang-code="en">
+                    <span>🇺🇸</span> English
+                </button>
+                <button class="lang-tab" data-lang="ar-SA" data-lang-code="ar">
+                    <span>🇸🇦</span> العربية
+                </button>
+                <button class="lang-tab" data-lang="so-SO" data-lang-code="so">
+                    <span>🇸🇴</span> Soomaali
+                </button>
+            </nav>
+        </footer>
+    </div>
+
+    <!-- Quick Reply Cards Modal -->
+    <div id="quickReplyModal" class="modal-wrapper hidden">
+        <div id="quickReplyOverlay" class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Quick Visual Replies</h3>
+                <button id="closeQuickReplyBtn" class="close-modal-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle">Tap a phrase to show it full-screen on your display:</p>
+                <div class="quick-cards-grid">
+                    <button class="quick-card" data-reply="YES / HAA / نعم">YES / HAA</button>
+                    <button class="quick-card" data-reply="NO / MAYA / لا">NO / MAYA</button>
+                    <button class="quick-card" data-reply="THANK YOU / MAHADSANID">THANK YOU</button>
+                    <button class="quick-card" data-reply="PLEASE WAIT / WADDA SUG">PLEASE WAIT</button>
+                    <button class="quick-card" data-reply="I NEED HELP / CAAWINAAD">NEED HELP</button>
+                    <button class="quick-card" data-reply="I CANNOT HEAR YOU">CAN'T HEAR YOU</button>
+                </div>
+                <div class="custom-reply-box">
+                    <input type="text" id="customReplyInput" placeholder="Type custom reply text..." />
+                    <div class="custom-reply-actions">
+                        <button id="speakCustomReplyBtn" class="btn-secondary" title="Read Aloud"><i data-lucide="volume-2"></i></button>
+                        <button id="sendCustomReplyBtn" class="btn-primary">Display Banner</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Screen Text Banner -->
+    <div id="fullScreenCardDisplay" class="fullscreen-banner-overlay hidden">
+        <button id="closeBannerBtn" class="close-banner-btn"><i data-lucide="x"></i></button>
+        <div id="bannerTextContainer" class="banner-text-content">YES</div>
+    </div>
+
+    <!-- History Drawer -->
+    <div id="historyDrawer" class="drawer-wrapper hidden">
+        <div id="historyOverlay" class="drawer-overlay"></div>
+        <div class="drawer-content">
+            <div class="drawer-header">
+                <h3>Saved Sessions</h3>
+                <button id="closeHistoryBtn" class="close-drawer-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="drawer-search">
+                <input type="text" id="historySearchInput" placeholder="Search transcript archives..." />
+            </div>
+            <div id="historyList" class="drawer-list">
+                <!-- Session items dynamically injected -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions & Tools Menu Modal -->
+    <div id="menuModal" class="modal-wrapper hidden">
+        <div id="menuOverlay" class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tools & Options</h3>
+                <button id="closeMenuBtn" class="close-modal-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body menu-actions-list">
+                <div class="font-scale-controls">
+                    <span>Text Size</span>
+                    <div class="font-btn-group">
+                        <button id="fontDecBtn" class="font-ctrl-btn">A-</button>
+                        <span id="fontSizeDisplay">100%</span>
+                        <button id="fontIncBtn" class="font-ctrl-btn">A+</button>
+                    </div>
+                </div>
+                <hr class="menu-divider" />
+                <button id="copyAllBtn" class="menu-action-item"><i data-lucide="copy"></i> Copy Entire Transcript</button>
+                <button id="exportBtn" class="menu-action-item"><i data-lucide="download"></i> Export as Text File (.txt)</button>
+                <button id="bookmarksBtn" class="menu-action-item"><i data-lucide="bookmark"></i> Filter Bookmarks Only</button>
+                <button id="clearBtn" class="menu-action-item danger"><i data-lucide="trash-2"></i> Clear Feed & Archive</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">Notification message</div>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
